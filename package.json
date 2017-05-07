@@ -1,0 +1,37 @@
+{
+  "name": "youtube",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvgeniyaMarchenkova/youtube.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvgeniyaMarchenkova/youtube/issues"
+  },
+  "homepage": "https://github.com/EvgeniyaMarchenkova/youtube#readme",
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "css-loader": "^0.28.0",
+    "extract-text-webpack-plugin": "^2.1.0",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.3",
+    "lodash": "^4.17.4",
+    "lodash-template-webpack-loader": "^1.0.2",
+    "style-loader": "^0.16.1",
+    "webpack": "^2.4.1"
+  },
+  "dependencies": {
+    "google-auth-library": "^0.10.0",
+    "googleapis": "^19.0.0",
+    "lodash-loader": "^1.0.1",
+    "lodash-template": "^1.0.0"
+  }
+}
