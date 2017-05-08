@@ -1,12 +1,11 @@
 var _ = require("lodash");
-import slideMethods from  './slidePage';
+import slider from  './slidePage';
 
 let pageHtml = {
     renderHtmlSlider : function () {
         let sliderWrapper = document.createElement('div');
         sliderWrapper.id = 'slider';
-        sliderWrapper.innerHTML = '<div id="content-slider"></div>'+
-            '<div class="pagination"><a href="#">1</a><a href="#">2</a><a href="#">3</a></div>';
+        sliderWrapper.innerHTML = '<div id="content-slider"></div>';
         document.body.appendChild(sliderWrapper);
         var btnLeft = document.createElement('button');
         btnLeft.id = 'btnLeft';
@@ -16,13 +15,12 @@ let pageHtml = {
         btnRigth.innerHTML = 'RIGTH';
         document.body.appendChild(btnLeft);
         document.body.appendChild(btnRigth);
-        btnRigth.onclick = slideMethods.slideToRigth;
-        btnLeft.onclick = slideMethods.slideToLeft;
+        btnRigth.onclick = slider.slideToRigth;
+        btnLeft.onclick = slider.slideToLeft;
 
 
     },
     renderSliderContent: function(videoContent) {
-        let count = 0;
         let resultStr='';
         console.log(videoContent);
         videoContent.items.forEach(function (video) {
@@ -33,15 +31,17 @@ let pageHtml = {
                 description:video.snippet.description,
                 author:video.snippet.channelTitle,
                 date:video.snippet.publishedAt,
-                count:count});
-            count++;
+                number:slider.number});
+            slider.number++;
 
         });
-        document.getElementById('content-slider').innerHTML = resultStr;
-        document.getElementById('content-slider').firstElementChild.classList.add('swipe__page_center');
-        document.getElementById('content-slider').children[1].classList.add('swipe__page_right')
-        document.getElementById('content-slider').children[2].classList.add('swipe__page_right')
+        document.getElementById('content-slider').innerHTML += resultStr;
 
+    },
+    renderPagination: function () {
+        let pagination = document.createElement('div');
+        pagination.id = 'pagination';
+        document.getElementById('slider').appendChild(pagination);
     }
 
 }
