@@ -10,16 +10,17 @@ let pageHtml = {
         let pagination = document.createElement('div');
         pagination.id = 'pagination';
         document.getElementById('slider').appendChild(pagination);
-        var btnLeft = document.createElement('button');
-        btnLeft.id = 'btnLeft';
-        btnLeft.innerHTML = 'LEFT';
-        var btnRigth = document.createElement('button');
-        btnRigth.id = 'btnRigth';
-        btnRigth.innerHTML = 'RIGTH';
-        document.body.appendChild(btnLeft);
-        document.body.appendChild(btnRigth);
-        btnRigth.onclick = slider.slideToRigth;
-        btnLeft.onclick = slider.slideToLeft;
+
+        //var btnLeft = document.createElement('button');
+        //btnLeft.id = 'btnLeft';
+        //btnLeft.innerHTML = 'LEFT';
+        //var btnRigth = document.createElement('button');
+        //btnRigth.id = 'btnRigth';
+        //btnRigth.innerHTML = 'RIGTH';
+        //document.body.appendChild(btnLeft);
+        //document.body.appendChild(btnRigth);
+       // btnRigth.onclick = slider.slideToRigth;
+      //  btnLeft.onclick = slider.slideToLeft;
 
 
     },

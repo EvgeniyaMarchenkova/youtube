@@ -2,8 +2,7 @@
 import "./main.less";
 import pageHtml from './renderHtml';
 import slider from  './slider';
-
-
+import swipe from  './swipe';
 
 
 class SearchButton
@@ -31,7 +30,10 @@ class SearchButton
     search() {
         pageHtml.renderHtmlSlider();
         slider.sendRequest();
-
+        let targetElement = document.getElementById('slider');
+        swipe.addMultipleListeners(targetElement, 'mousedown touchstart', swipe.swipeStart);
+        swipe.addMultipleListeners(targetElement, 'mousemove touchmove', swipe.swipeMove);
+        swipe.addMultipleListeners(targetElement, 'mouseup touchend', swipe.swipeEnd);
     }
 }
 

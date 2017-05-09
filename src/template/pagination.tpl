@@ -1,1 +1,1 @@
-<span><a href = 'javascript:slider.slideToPage("<%- ref %>")'><%- numberOfPage %></a></span>
+<span><a href = '#' onclick = 'slider.slideToPage("<%- ref %>")'><%- numberOfPage %></a></span>
