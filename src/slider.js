@@ -20,6 +20,25 @@ let slider = {
         leftElm.classList.remove('swipe__page_left');
         leftElm.classList.add('swipe__page_center');
     },
+    slideToPage : function(idPage) {
+        console.log(idPage);
+        let currentPage = document.getElementById(idPage);
+        currentPage.classList.remove('swipe__page_right');
+        currentPage.classList.remove('swipe__page_left');
+        currentPage.classList.add('swipe__page_center');
+        let arrLeftPages = currentPage.previousSibling;
+        arrLeftPages.forEach(function (page) {
+            page.classList.remove('swipe__page_center');
+            page.classList.remove('swipe__page_right');
+            page.classList.add('swipe__page_left');
+        })
+        let arrRightPages = currentPage.nextSibling;
+        arrRightPages.forEach(function (page) {
+            page.classList.remove('swipe__page_center');
+            page.classList.remove('swipe__page_left');
+            page.classList.add('swipe__page_right');
+        })
+    },
     detectClass : function() {
         let  e = document.getElementById('content-slider').lastElementChild;
         var observer = new MutationObserver(function (event) {
@@ -43,6 +62,8 @@ let slider = {
                 .then(function (value) {
                     slider.nextPage = value.nextPageToken;
                     pageHtml.renderSliderContent(value);
+                    var arrOfPage = document.getElementsByClassName('wrapper-page-slade');
+                    pageHtml.renderPagination(arrOfPage);
                     slider.detectClass();
                 })
         ;

@@ -1,7 +1,7 @@
 'use strict';
 import "./main.less";
 import pageHtml from './renderHtml';
-import slider from  './slidePage';
+import slider from  './slider';
 
 
 
@@ -31,7 +31,7 @@ class SearchButton
     search() {
         pageHtml.renderHtmlSlider();
         slider.sendRequest();
-        pageHtml.renderPagination();
+
     }
 }
 

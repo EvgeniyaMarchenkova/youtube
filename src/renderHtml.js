@@ -1,5 +1,5 @@
 var _ = require("lodash");
-import slider from  './slidePage';
+import slider from  './slider';
 
 let pageHtml = {
     renderHtmlSlider : function () {
@@ -7,6 +7,9 @@ let pageHtml = {
         sliderWrapper.id = 'slider';
         sliderWrapper.innerHTML = '<div id="content-slider"></div>';
         document.body.appendChild(sliderWrapper);
+        let pagination = document.createElement('div');
+        pagination.id = 'pagination';
+        document.getElementById('slider').appendChild(pagination);
         var btnLeft = document.createElement('button');
         btnLeft.id = 'btnLeft';
         btnLeft.innerHTML = 'LEFT';
@@ -38,10 +41,16 @@ let pageHtml = {
         document.getElementById('content-slider').innerHTML += resultStr;
 
     },
-    renderPagination: function () {
-        let pagination = document.createElement('div');
-        pagination.id = 'pagination';
-        document.getElementById('slider').appendChild(pagination);
+    renderPagination: function (pages){
+        let resultStrOfPagination = '';
+        [].forEach.call(pages, function (page) {
+            let refToPage = require('./template/pagination.tpl');
+            resultStrOfPagination += refToPage({
+                ref:page.id,
+                numberOfPage: +page.id.replace(/\D+/g,"")
+            } ) })
+        document.getElementById('pagination').innerHTML = resultStrOfPagination;
+
     }
 
 }
