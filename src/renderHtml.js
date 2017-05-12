@@ -47,17 +47,21 @@ let pageHtml = {
         let resultStrOfPagination = '';
         [].reduce.call(pages, function (prevResult, page) {
             let refToPage = require('./template/pagination.tpl');
-            resultStrOfPagination += refToPage({
-                ref:page.id,
-                numberOfPage: prevResult++
-            } );
+            console.log(+page.id.replace(/\D+/,''))
+            if (+page.id.replace(/\D+/,'') % slider.countOfVideos == 0) {
+                resultStrOfPagination += refToPage({
+                    ref:page.id,
+                    numberOfPage: prevResult++
+                } );
+            }
+
             return prevResult;
         }, 1)
         let paginationElm = document.getElementById('pagination');
         paginationElm.innerHTML = resultStrOfPagination;
         let paginationLinks = paginationElm.querySelectorAll('span a');
         Array.from(paginationLinks).forEach(function(link) {
-            link.addEventListener('click', function () { slider.slideToPage(this.getAttribute('data-page')) });
+            link.addEventListener('click', function () { slider.slideToPage(this.getAttribute('id')) });
         });
     }
 

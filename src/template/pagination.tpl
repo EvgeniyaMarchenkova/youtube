@@ -1,1 +1,1 @@
-<span><a href = '#' data-page="<%- ref %>"><%- numberOfPage %></a></span>
+<span><a href = '#' id="number-of-page-<%- numberOfPage %>"><%- numberOfPage %></a></span>

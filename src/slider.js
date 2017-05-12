@@ -7,71 +7,39 @@ class Slider  {
         this.number = 0;
         this.nextPage = '';
         this.countOfVideos = 0;
+        this.slideWidth = 0;
+        this.arrOfVideos = [];
         this.detectClass = this.detectClass.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
+        this.calculateCountOfVideo();
+
+
+
     }
     slideToRigth () {
-        let currentElm = document.getElementsByClassName('swipe__page_center')[0];
-        currentElm.classList.remove('swipe__page_center');
-        currentElm.classList.add('swipe__page_left');
-        let rigthElm = document.getElementsByClassName('swipe__page_right')[0];
-        rigthElm.classList.remove('swipe__page_right');
-        rigthElm.classList.add('swipe__page_center');
+        let currentMarginLeft = +document.getElementById('content-slider').style.marginLeft.replace('px', '')||0;
+        document.getElementById('content-slider').style.marginLeft = currentMarginLeft-this.slideWidth*this.countOfVideos + "px" ;
     }
     slideToLeft() {
-        let currentElm = document.getElementsByClassName('swipe__page_center')[0];
-        currentElm.classList.remove('swipe__page_center');
-        currentElm.classList.add('swipe__page_right');
-        let leftElm = document.getElementsByClassName('swipe__page_left')[document.getElementsByClassName('swipe__page_left').length - 1];
-        leftElm.classList.remove('swipe__page_left');
-        leftElm.classList.add('swipe__page_center');
+        let currentMarginLeft = +document.getElementById('content-slider').style.marginLeft.replace('px', '')||0;
+        document.getElementById('content-slider').style.marginLeft = currentMarginLeft+this.slideWidth*this.countOfVideos + "px" ;
     }
     slideToPage(idPage) {
         console.log(idPage);
-        let currentPage = document.getElementById(idPage);
-        currentPage.classList.remove('swipe__page_right');
-        currentPage.classList.remove('swipe__page_left');
-        currentPage.classList.add('swipe__page_center');
-        let arrLeftPages = (function(elem) {
-            let arrLeftSibl = [];
-            while (elem = elem.previousSibling) {
-                if (elem.nodeType === 1) {
-                    arrLeftSibl.push(elem);
-                }
-            }
-            return arrLeftSibl;
-        })(currentPage);
-        [].forEach.call(arrLeftPages, function (page) {
-            page.classList.remove('swipe__page_center');
-            page.classList.remove('swipe__page_right');
-            page.classList.add('swipe__page_left');
-        })
-        currentPage = document.getElementById(idPage);
-        let arrRightPages = (function(elem) {
-            let arrRightSibl = [];
-            while (elem = elem.nextSibling) {
-                if (elem.nodeType === 1) {
-                    arrRightSibl.push(elem);
-                }
-            }
-            return arrRightSibl;
-        })(currentPage);
-        [].forEach.call(arrRightPages, function (page) {
-            page.classList.remove('swipe__page_center');
-            page.classList.remove('swipe__page_left');
-            page.classList.add('swipe__page_right');
-        })
+        let currentMarginLeft = +document.getElementById('content-slider').style.marginLeft.replace('px', '')||0;
+        document.getElementById('content-slider').style.marginLeft = - (idPage.replace(/\D+/,'')-1) *this.slideWidth*this.countOfVideos + "px" ;
+
     }
     detectClass() {
-        let  e = document.getElementById('content-slider').lastElementChild;
+        let  e = document.getElementById('content-slider');
         let observer = new MutationObserver(function (event) {
-            if (e.classList.contains('swipe__page_center')) {
+            if (e.style.marginLeft == -(this.arrOfVideos.length/this.countOfVideos - 1) * (this.slideWidth * this.countOfVideos) + 'px') {
                 this.sendRequest();
             }
         }.bind(this));
         observer.observe(e, {
             attributes: true,
-            attributeFilter: ['class'],
+            attributeFilter: ['style'],
             childList: false,
             characterData: false
         })
@@ -91,28 +59,36 @@ class Slider  {
                 
                 .then(function (value) {
                     let sliderElm = document.getElementById('slider');
-                    this.calculateCountOfVideo();
                     sliderElm.onresize = function () {
                         console.log(this)
                         this.calculateCountOfVideo();
                     }.bind(this);
                     this.nextPage = value.nextPageToken;
                     pageHtml.renderSliderContent(value, this.countOfVideos);
-                    var arrOfPage = document.getElementsByClassName('wrapper-page-slade');
-                    pageHtml.renderPagination(arrOfPage);
+                    sliderElm.style.width = this.countOfVideos * this.slideWidth;
+                    this.arrOfVideos = document.getElementsByClassName('slide');
+                    Array.from(this.arrOfVideos).forEach(function (video) {
+                        console.log(this.slideWidth)
+                        video.style.minWidth = this.slideWidth + 'px';
+                    }.bind(this));
+                    pageHtml.renderPagination(this.arrOfVideos);
                     this.detectClass();
                 }.bind(this))
     }
     calculateCountOfVideo() {
         if  (window.innerWidth > 1200) {
             this.countOfVideos = 5;
+            this.slideWidth = 300;
         }
         else if (window.innerWidth >  800 && window.innerWidth < 1200) {
             this.countOfVideos = 3;
+            this.slideWidth = 400;
         }
         else {
             this.countOfVideos = 1;
+            this.slideWidth = 600;
         }
+
     }
 }
 

@@ -1,8 +1,5 @@
-  <% if (number % count == 0 ) { %>
-    <div class = 'wrapper-page-slade <% if (number  == 0){ %> swipe__page_center <% } else { %>swipe__page_right <% } %> '
-    id = 'list-<%=number/count+1%>'>
-  <% } %>
-  <div class = 'slide'>
+
+  <div class = 'slide' id = 'slide-id-<%=number+1%>'>
       <a href = '<%- url %>' >
          <div><%- title %></div>
       </a>
@@ -10,9 +7,7 @@
       <div class = "author"><%- author %></div>
 
   </div>
-  <% if (number % count == count - 1) { %>
-    </div>
-  <% } %>
+
 
 
 
