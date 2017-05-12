@@ -1,75 +1,120 @@
-var _ = require("lodash");
+let _ = require("lodash");
 import pageHtml from './renderHtml';
+import {p} from './app';
 
-let slider = {
-    number :0,
-    nextPage: '',
-    slideToRigth : function() {
+class Slider  {
+    constructor() {
+        this.number = 0;
+        this.nextPage = '';
+        this.countOfVideos = 0;
+        this.detectClass = this.detectClass.bind(this);
+        this.sendRequest = this.sendRequest.bind(this);
+    }
+    slideToRigth () {
         let currentElm = document.getElementsByClassName('swipe__page_center')[0];
         currentElm.classList.remove('swipe__page_center');
         currentElm.classList.add('swipe__page_left');
         let rigthElm = document.getElementsByClassName('swipe__page_right')[0];
         rigthElm.classList.remove('swipe__page_right');
         rigthElm.classList.add('swipe__page_center');
-    },
-    slideToLeft : function() {
+    }
+    slideToLeft() {
         let currentElm = document.getElementsByClassName('swipe__page_center')[0];
         currentElm.classList.remove('swipe__page_center');
         currentElm.classList.add('swipe__page_right');
         let leftElm = document.getElementsByClassName('swipe__page_left')[document.getElementsByClassName('swipe__page_left').length - 1];
         leftElm.classList.remove('swipe__page_left');
         leftElm.classList.add('swipe__page_center');
-    },
-    slideToPage : function(idPage) {
+    }
+    slideToPage(idPage) {
         console.log(idPage);
         let currentPage = document.getElementById(idPage);
         currentPage.classList.remove('swipe__page_right');
         currentPage.classList.remove('swipe__page_left');
         currentPage.classList.add('swipe__page_center');
-        let arrLeftPages = currentPage.previousSibling;
-        arrLeftPages.forEach(function (page) {
+        let arrLeftPages = (function(elem) {
+            let arrLeftSibl = [];
+            while (elem = elem.previousSibling) {
+                if (elem.nodeType === 1) {
+                    arrLeftSibl.push(elem);
+                }
+            }
+            return arrLeftSibl;
+        })(currentPage);
+        [].forEach.call(arrLeftPages, function (page) {
             page.classList.remove('swipe__page_center');
             page.classList.remove('swipe__page_right');
             page.classList.add('swipe__page_left');
         })
-        let arrRightPages = currentPage.nextSibling;
-        arrRightPages.forEach(function (page) {
+        currentPage = document.getElementById(idPage);
+        let arrRightPages = (function(elem) {
+            let arrRightSibl = [];
+            while (elem = elem.nextSibling) {
+                if (elem.nodeType === 1) {
+                    arrRightSibl.push(elem);
+                }
+            }
+            return arrRightSibl;
+        })(currentPage);
+        [].forEach.call(arrRightPages, function (page) {
             page.classList.remove('swipe__page_center');
             page.classList.remove('swipe__page_left');
             page.classList.add('swipe__page_right');
         })
-    },
-    detectClass : function() {
+    }
+    detectClass() {
         let  e = document.getElementById('content-slider').lastElementChild;
-        var observer = new MutationObserver(function (event) {
-            if (e.classList.contains  = 'swipe__page_center') {
-                slider.sendRequest();
+        let observer = new MutationObserver(function (event) {
+            if (e.classList.contains('swipe__page_center')) {
+                this.sendRequest();
             }
-        })
+        }.bind(this));
         observer.observe(e, {
             attributes: true,
             attributeFilter: ['class'],
             childList: false,
             characterData: false
         })
-
-    },
-    sendRequest: function() {
-        let promise = fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=15&videoEmbeddable=true&safeSearch=strict&order=relevance&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q='+this.searchText + '&pageToken=' + slider.nextPage)
+    }
+    sendRequest() {
+        let promise = fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=15&videoEmbeddable=true&safeSearch=strict&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q='+p.searchText + '&pageToken=' + this.nextPage )
                 .then(function(response) {
                     return response.json();
                 })
+                //.then(function (val) {
+                //    val.items.forEach(function (video) {
+                 //       fetch('https://www.googleapis.com/youtube/v3/search?part=statistics&id=' + video.id.videoId + '&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q=')
+                 //           .then(function () {
+                 //           })
+                 //   })
+                //})
+                
                 .then(function (value) {
-                    slider.nextPage = value.nextPageToken;
-                    pageHtml.renderSliderContent(value);
+                    let sliderElm = document.getElementById('slider');
+                    this.calculateCountOfVideo();
+                    sliderElm.onresize = function () {
+                        console.log(this)
+                        this.calculateCountOfVideo();
+                    }.bind(this);
+                    this.nextPage = value.nextPageToken;
+                    pageHtml.renderSliderContent(value, this.countOfVideos);
                     var arrOfPage = document.getElementsByClassName('wrapper-page-slade');
                     pageHtml.renderPagination(arrOfPage);
-                    slider.detectClass();
-                })
-        ;
-    },
-
+                    this.detectClass();
+                }.bind(this))
+    }
+    calculateCountOfVideo() {
+        if  (window.innerWidth > 1200) {
+            this.countOfVideos = 5;
+        }
+        else if (window.innerWidth >  800 && window.innerWidth < 1200) {
+            this.countOfVideos = 3;
+        }
+        else {
+            this.countOfVideos = 1;
+        }
+    }
 }
 
 
-export default slider;
+export default Slider;

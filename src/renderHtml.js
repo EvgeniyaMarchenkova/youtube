@@ -1,5 +1,5 @@
 var _ = require("lodash");
-import slider from  './slider';
+import {slider} from  './app';
 
 let pageHtml = {
     renderHtmlSlider : function () {
@@ -24,7 +24,7 @@ let pageHtml = {
 
 
     },
-    renderSliderContent: function(videoContent) {
+    renderSliderContent: function(videoContent, count) {
         let resultStr='';
         console.log(videoContent);
         videoContent.items.forEach(function (video) {
@@ -35,7 +35,8 @@ let pageHtml = {
                 description:video.snippet.description,
                 author:video.snippet.channelTitle,
                 date:video.snippet.publishedAt,
-                number:slider.number});
+                number:slider.number,
+                count:count});
             slider.number++;
 
         });
@@ -44,14 +45,20 @@ let pageHtml = {
     },
     renderPagination: function (pages){
         let resultStrOfPagination = '';
-        [].forEach.call(pages, function (page) {
+        [].reduce.call(pages, function (prevResult, page) {
             let refToPage = require('./template/pagination.tpl');
             resultStrOfPagination += refToPage({
                 ref:page.id,
-                numberOfPage: +page.id.replace(/\D+/g,"")
-            } ) })
-        document.getElementById('pagination').innerHTML = resultStrOfPagination;
-
+                numberOfPage: prevResult++
+            } );
+            return prevResult;
+        }, 1)
+        let paginationElm = document.getElementById('pagination');
+        paginationElm.innerHTML = resultStrOfPagination;
+        let paginationLinks = paginationElm.querySelectorAll('span a');
+        Array.from(paginationLinks).forEach(function(link) {
+            link.addEventListener('click', function () { slider.slideToPage(this.getAttribute('data-page')) });
+        });
     }
 
 }

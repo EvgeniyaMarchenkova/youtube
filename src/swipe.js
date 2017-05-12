@@ -1,4 +1,4 @@
-import slider from  './slider';
+import {slider} from  './app';
 
 let swipe = {
     touchStartCoords :  {'x':-1, 'y':-1}, // X and Y coordinates on mousedown or touchstart events.
