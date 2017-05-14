@@ -25,16 +25,16 @@ class SearchButton
     }
 
     search() {
-        pageHtml.renderHtmlSlider();
-        slider.sendRequest();
+        slider.newSearchRequest(this.searchText);
         let targetElement = document.getElementById('slider');
         swipe.addMultipleListeners(targetElement, 'mousedown touchstart', swipe.swipeStart);
         swipe.addMultipleListeners(targetElement, 'mousemove touchmove', swipe.swipeMove);
         swipe.addMultipleListeners(targetElement, 'mouseup touchend', swipe.swipeEnd);
     }
 }
-let slider = new Slider();
 let p = new SearchButton();
+let slider = new Slider();
+
 
 
 export {p, slider};

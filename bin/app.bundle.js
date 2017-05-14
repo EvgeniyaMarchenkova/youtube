@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,97 +76,23 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-
-var _slidePage = __webpack_require__(16);
-
-var _slidePage2 = _interopRequireDefault(_slidePage);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var _ = __webpack_require__(5);
-
-
-var pageHtml = {
-    renderHtmlSlider: function renderHtmlSlider() {
-        var sliderWrapper = document.createElement('div');
-        sliderWrapper.id = 'slider';
-        sliderWrapper.innerHTML = '<div id="content-slider"></div>' + '<div class="pagination"><a href="#">1</a><a href="#">2</a><a href="#">3</a></div>';
-        document.body.appendChild(sliderWrapper);
-        var btnLeft = document.createElement('button');
-        btnLeft.id = 'btnLeft';
-        btnLeft.innerHTML = 'LEFT';
-        var btnRigth = document.createElement('button');
-        btnRigth.id = 'btnRigth';
-        btnRigth.innerHTML = 'RIGTH';
-        document.body.appendChild(btnLeft);
-        document.body.appendChild(btnRigth);
-        btnRigth.onclick = _slidePage2.default.slideToRigth;
-        btnLeft.onclick = _slidePage2.default.slideToLeft;
-    },
-    renderSliderContent: function renderSliderContent(videoContent) {
-        var count = 0;
-        var resultStr = '';
-        console.log(videoContent);
-        videoContent.items.forEach(function (video) {
-            var item = __webpack_require__(4);
-            resultStr += item({ title: video.snippet.title,
-                urlImg: video.snippet.thumbnails.default.url,
-                url: "https://www.youtube.com/watch?v=" + video.id.videoId,
-                description: video.snippet.description,
-                author: video.snippet.channelTitle,
-                date: video.snippet.publishedAt,
-                count: count });
-            count++;
-        });
-        document.getElementById('content-slider').innerHTML = resultStr;
-        document.getElementById('content-slider').firstElementChild.classList.add('swipe__page_center');
-        document.getElementById('content-slider').children[1].classList.add('swipe__page_right');
-        document.getElementById('content-slider').children[2].classList.add('swipe__page_right');
-    }
-
-};
-
-exports.default = pageHtml;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-var _imports = (typeof _ !== 'undefined') ? _.templateSettings.imports : {};
-var _keys = _.keys;
-var _values = _.values
-module.exports = Function(_keys(_imports), 'return ' + function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '<label>' +
-__e( title ) +
-'</label>\r\n    <input type="text" id="search_input" />';
-
-}
-return __p
-}.toString()).apply(undefined, _values(_imports));
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
+exports.slider = exports.p = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-__webpack_require__(1);
+__webpack_require__(5);
 
-var _createSlider = __webpack_require__(0);
+var _renderHtml = __webpack_require__(1);
 
-var _createSlider2 = _interopRequireDefault(_createSlider);
+var _renderHtml2 = _interopRequireDefault(_renderHtml);
+
+var _slider = __webpack_require__(3);
+
+var _slider2 = _interopRequireDefault(_slider);
+
+var _swipe = __webpack_require__(4);
+
+var _swipe2 = _interopRequireDefault(_swipe);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -178,12 +104,9 @@ var SearchButton = function () {
 
         this.searchTimeout = null;
         this.searchText = '';
-
-        var searchButtonTemplate = __webpack_require__(2);
+        var searchButtonTemplate = __webpack_require__(6);
         document.write(searchButtonTemplate({ title: "Search on Youtube" }));
-
         var searchInput = document.getElementById('search_input');
-
         searchInput.onkeyup = function (e) {
             if (this.searchTimeout != null) clearTimeout(this.searchTimeout);
             this.searchTimeout = setTimeout(function () {
@@ -196,16 +119,11 @@ var SearchButton = function () {
     _createClass(SearchButton, [{
         key: 'search',
         value: function search() {
-            var promise = fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=15&videoEmbeddable=true&safeSearch=strict&order=relevance&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q=' + this.searchText).then(function (response) {
-                return response.json();
-            }).then(function (value) {
-                _createSlider2.default.renderHtmlSlider();
-                _createSlider2.default.renderSliderContent(value);
-
-                // document.getElementById("content-slider").childNodes[2].classList.add("first-visible-slide");
-                //  document.getElementById("content-slider").childNodes[3].classList.add("second-visible-slide");
-                // document.getElementById("content-slider").childNodes[4].classList.add("thirth-visible-slide");
-            });
+            slider.newSearchRequest(this.searchText);
+            var targetElement = document.getElementById('slider');
+            _swipe2.default.addMultipleListeners(targetElement, 'mousedown touchstart', _swipe2.default.swipeStart);
+            _swipe2.default.addMultipleListeners(targetElement, 'mousemove touchmove', _swipe2.default.swipeMove);
+            _swipe2.default.addMultipleListeners(targetElement, 'mouseup touchend', _swipe2.default.swipeEnd);
         }
     }]);
 
@@ -213,43 +131,109 @@ var SearchButton = function () {
 }();
 
 var p = new SearchButton();
+var slider = new _slider2.default();
+
+exports.p = p;
+exports.slider = slider;
 
 /***/ }),
-/* 4 */
-/***/ (function(module, exports) {
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
 
-var _imports = (typeof _ !== 'undefined') ? _.templateSettings.imports : {};
-var _keys = _.keys;
-var _values = _.values
-module.exports = Function(_keys(_imports), 'return ' + function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '\n  ';
- if (count % 5 == 0 ) { ;
-__p += '\n    <div class = \'wrapper-page-slade\' >\n  ';
- } ;
-__p += '\n  <div class = \'slide\'>\n      <a href = \'' +
-__e( url ) +
-'\' >\n         <div>' +
-__e( title ) +
-'</div>\n      </a>\n      <div class=\'preview-image\'><img src = ' +
-__e(urlImg) +
-' ></div>\n      <div class = "author">' +
-__e( author ) +
-'</div>\n\n  </div>\n  ';
- if (count % 5 == 4) { ;
-__p += '\n    </div>\n  ';
- } ;
-__p += '\n\n\n\n\n\n\n\n';
+"use strict";
 
-}
-return __p
-}.toString()).apply(undefined, _values(_imports));
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _app = __webpack_require__(0);
+
+var _ = __webpack_require__(2);
+
+
+var pageHtml = {
+    renderHtmlSlider: function renderHtmlSlider() {
+        var sliderWrapper = document.querySelector('#slider');
+        if (sliderWrapper) sliderWrapper.remove();
+        sliderWrapper = document.createElement('div');
+        sliderWrapper.id = 'slider';
+        sliderWrapper.innerHTML = '<div id="content-slider"></div>';
+        document.body.appendChild(sliderWrapper);
+        var pagination = document.createElement('div');
+        pagination.id = 'pagination';
+        document.getElementById('slider').appendChild(pagination);
+
+        //var btnLeft = document.createElement('button');
+        //btnLeft.id = 'btnLeft';
+        //btnLeft.innerHTML = 'LEFT';
+        //var btnRigth = document.createElement('button');
+        //btnRigth.id = 'btnRigth';
+        //btnRigth.innerHTML = 'RIGTH';
+        //document.body.appendChild(btnLeft);
+        //document.body.appendChild(btnRigth);
+        // btnRigth.onclick = slider.slideToRigth;
+        //  btnLeft.onclick = slider.slideToLeft;
+
+    },
+    renderSliderContent: function renderSliderContent(appendVideos, countOnPage, offset, slideWidth) {
+        var resultStr = '';
+        var item = __webpack_require__(8);
+        appendVideos.forEach(function (video, i) {
+            resultStr += item({
+                title: video.snippet.title,
+                urlImg: video.snippet.thumbnails.default.url,
+                url: "https://www.youtube.com/watch?v=" + video.id.videoId,
+                description: video.snippet.description,
+                author: video.snippet.channelTitle,
+                date: video.snippet.publishedAt,
+                number: offset + i,
+                count: countOnPage,
+                viewCount: video.statistics.viewCount,
+                width: slideWidth
+            });
+            _app.slider.number++;
+        });
+        document.getElementById('content-slider').innerHTML += resultStr;
+    },
+    renderPagination: function renderPagination(currentPage, totalItems, itemsOnThePage) {
+
+        var maxPageNumber = Math.ceil(totalItems / itemsOnThePage);
+        var page = currentPage - 2;
+        if (page < 1) {
+            page = 1;
+        }
+        var resultStrOfPagination = '';
+        var refToPage = __webpack_require__(7);
+        var pages = Array(5).fill().map(function (e, i) {
+
+            if (page > maxPageNumber) {
+                return;
+            }
+
+            resultStrOfPagination += refToPage({
+                currentPage: currentPage,
+                numberOfPage: page
+            });
+            page++;
+        });
+
+        var paginationElm = document.getElementById('pagination');
+        paginationElm.innerHTML = resultStrOfPagination;
+        var paginationLinks = paginationElm.querySelectorAll('span a');
+        Array.from(paginationLinks).forEach(function (link) {
+            link.addEventListener('click', function () {
+                _app.slider.slideToPage(this.getAttribute('data-page-id'));event.preventDefault();return false;
+            });
+        });
+    }
+
+};
+
+exports.default = pageHtml;
 
 /***/ }),
-/* 5 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -17338,10 +17322,361 @@ return __p
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6), __webpack_require__(7)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), __webpack_require__(10)(module)))
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _renderHtml = __webpack_require__(1);
+
+var _renderHtml2 = _interopRequireDefault(_renderHtml);
+
+var _app = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _ = __webpack_require__(2);
+
+var Slider = function () {
+    function Slider() {
+        _classCallCheck(this, Slider);
+
+        this.reset();
+        this.detectClass = this.detectClass.bind(this);
+        this.sendRequest = this.sendRequest.bind(this);
+
+        this.currentLeftSlide = null;
+        window.onresize = function () {
+            this.calculateCountOfVideo();
+        }.bind(this);
+    }
+
+    _createClass(Slider, [{
+        key: 'appendVideos',
+        value: function appendVideos(videos) {
+            this.videosArray = this.videosArray.concat(videos);
+            _renderHtml2.default.renderSliderContent(videos, this.countOfVideos, (this.currentPage - 1) * this.countOfVideos, this.slideWidth);
+        }
+    }, {
+        key: 'slideToRigth',
+        value: function slideToRigth() {
+            if (this.currentPage + 1 > Math.ceil(this.totalVideos / this.countOfVideos)) return;
+
+            this.slideToPage(this.currentPage + 1);
+        }
+    }, {
+        key: 'slideToLeft',
+        value: function slideToLeft() {
+            if (this.currentPage - 1 < 1) return;
+
+            this.slideToPage(this.currentPage - 1);
+        }
+    }, {
+        key: 'slideToPage',
+        value: function slideToPage(pageNumber) {
+            this.currentLeftSlide = document.querySelector('#slide-id-' + ((pageNumber - 1) * this.countOfVideos + 1));
+            document.getElementById('content-slider').style.marginLeft = -(pageNumber - 1) * this.slideWidth * this.countOfVideos + "px";
+            this.currentPage = pageNumber;
+
+            if (this.currentPage * this.countOfVideos >= this.videosArray.length - 5) {
+                this.sendRequest();
+            }
+        }
+    }, {
+        key: 'detectClass',
+        value: function detectClass() {
+            var e = document.getElementById('content-slider');
+            var observer = new MutationObserver(function (event) {
+                if (e.style.marginLeft == -(this.arrOfVideos.length / this.countOfVideos - 1) * (this.slideWidth * this.countOfVideos) + 'px') {
+                    //this.sendRequest();
+                }
+            }.bind(this));
+            observer.observe(e, {
+                attributes: true,
+                attributeFilter: ['style'],
+                childList: false,
+                characterData: false
+            });
+        }
+    }, {
+        key: 'reset',
+        value: function reset() {
+            this.searchText = null;
+            this.privateCurrentPage = 1;
+            this.privateTotalVideos = 0;
+            this.privateCountOfVideos = 0;
+            this.nextPage = '';
+            this.arrOfVideos = [];
+            this.videosArray = [];
+        }
+    }, {
+        key: 'newSearchRequest',
+        value: function newSearchRequest(searchText) {
+            this.reset();
+            this.searchText = searchText;
+            _renderHtml2.default.renderHtmlSlider();
+            this.calculateCountOfVideo();
+        }
+    }, {
+        key: 'sendRequest',
+        value: function sendRequest() {
+            var promise = fetch('https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=15&videoEmbeddable=true&safeSearch=strict&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q=' + this.searchText + '&pageToken=' + this.nextPage).then(function (response) {
+                return response.json();
+            }).then(function (value) {
+                this.totalVideos = value.pageInfo.totalResults;
+                this.nextPage = value.nextPageToken;
+
+                var ids = Array(value.items.length).fill().map(function (e, i) {
+                    return value.items[i].id.videoId;
+                }).join();
+
+                fetch('https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=' + ids + '&key=AIzaSyA0TiCvVNO_CMEc1T1S1XLqto1iRQtb2t0&q=').then(function (response) {
+                    return response.json();
+                }).then(function (value) {
+
+                    this.appendVideos(value.items);
+                }.bind(this));
+            }.bind(this));
+        }
+    }, {
+        key: 'calculateCountOfVideo',
+        value: function calculateCountOfVideo() {
+
+            var currentLeftElement = (this.currentPage - 1) * this.countOfVideos + 1;
+            if (document.documentElement.clientWidth > 1680) {
+                this.countOfVideos = 5;
+                this.slideWidth = 336;
+            } else if (document.documentElement.clientWidth > 1200 && document.documentElement.clientWidth < 1680) {
+                this.countOfVideos = 3;
+                this.slideWidth = 600;
+            }
+            //else if (document.documentElement.clientWidth >  800 && document.documentElement.clientWidth < 1200) {
+            //    this.countOfVideos = 3;
+            //   this.slideWidth = 266;
+            //}
+            else {
+                    this.countOfVideos = 1;
+                    this.slideWidth = 800;
+                }
+
+            // при ресайзе меняем ширину всех отрисованных элементов
+            this.arrOfVideos = document.querySelectorAll('.slide');
+            Array.from(this.arrOfVideos).forEach(function (video) {
+                video.style.width = String(this.slideWidth) + 'px';
+                video.style.minWidth = String(this.slideWidth) + 'px';
+            }.bind(this));
+
+            var sliderHtml = document.getElementById('slider');
+            sliderHtml.style.width = String(this.slideWidth * this.countOfVideos) + 'px';
+            sliderHtml.style.minWidth = String(this.slideWidth * this.countOfVideos) + 'px';
+
+            this.currentPage = Math.ceil(currentLeftElement / this.countOfVideos);
+            this.slideToPage(this.currentPage);
+        }
+    }, {
+        key: 'currentPage',
+        get: function get() {
+            return this.privateCurrentPage;
+        },
+        set: function set(newValue) {
+            this.privateCurrentPage = newValue;
+            _renderHtml2.default.renderPagination(this.currentPage, this.totalVideos, this.countOfVideos);
+        }
+    }, {
+        key: 'totalVideos',
+        get: function get() {
+            return this.privateTotalVideos;
+        },
+        set: function set(newValue) {
+            this.privateTotalVideos = newValue;
+            _renderHtml2.default.renderPagination(this.currentPage, this.totalVideos, this.countOfVideos);
+        }
+    }, {
+        key: 'countOfVideos',
+        get: function get() {
+            return this.privateCountOfVideos;
+        },
+        set: function set(newValue) {
+            this.privateCountOfVideos = newValue;
+            _renderHtml2.default.renderPagination(this.currentPage, this.totalVideos, this.countOfVideos);
+        }
+    }]);
+
+    return Slider;
+}();
+
+exports.default = Slider;
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _app = __webpack_require__(0);
+
+var swipe = {
+    touchStartCoords: { 'x': -1, 'y': -1 }, // X and Y coordinates on mousedown or touchstart events.
+    touchEndCoords: { 'x': -1, 'y': -1 }, // X and Y coordinates on mouseup or touchend events.
+    direction: 'undefined', // Swipe direction
+    minDistanceXAxis: 30, // Min distance on mousemove or touchmove on the X axis
+    maxDistanceYAxis: 30, // Max distance on mousemove or touchmove on the Y axis
+    maxAllowedTime: 1000, // Max allowed time between swipeStart and swipeEnd
+    startTime: 0, // Time on swipeStart
+    elapsedTime: 0, // Elapsed time between swipeStart and swipeEnd
+
+    swipeStart: function swipeStart(e) {
+        e = e ? e : window.event;
+        e = 'changedTouches' in e ? e.changedTouches[0] : e;
+        swipe.touchStartCoords = { 'x': e.pageX, 'y': e.pageY };
+        swipe.startTime = new Date().getTime();
+        document.getElementById('content-slider').style.cursor = 'grab';
+        //targetElement.textContent = " ";
+    },
+
+    swipeMove: function swipeMove(e) {
+        e = e ? e : window.event;
+        e.preventDefault();
+    },
+
+    swipeEnd: function swipeEnd(e) {
+        e = e ? e : window.event;
+        e = 'changedTouches' in e ? e.changedTouches[0] : e;
+        swipe.touchEndCoords = { 'x': e.pageX - swipe.touchStartCoords.x, 'y': e.pageY - swipe.touchStartCoords.y };
+        swipe.elapsedTime = new Date().getTime() - swipe.startTime;
+        if (swipe.elapsedTime <= swipe.maxAllowedTime) {
+            if (Math.abs(swipe.touchEndCoords.x) >= swipe.minDistanceXAxis && Math.abs(swipe.touchEndCoords.y) <= swipe.maxDistanceYAxis) {
+                swipe.direction = swipe.touchEndCoords.x < 0 ? 'left' : 'right';
+                switch (swipe.direction) {
+                    case 'left':
+                        _app.slider.slideToRigth();
+                        break;
+                    case 'right':
+                        _app.slider.slideToLeft();
+                        break;
+                }
+            }
+        }
+    },
+
+    addMultipleListeners: function addMultipleListeners(el, s, fn) {
+        var evts = s.split(' ');
+        for (var i = 0, iLen = evts.length; i < iLen; i++) {
+            el.addEventListener(evts[i], fn, false);
+        }
+    }
+
+};
+
+exports.default = swipe;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports) {
+
+var _imports = (typeof _ !== 'undefined') ? _.templateSettings.imports : {};
+var _keys = _.keys;
+var _values = _.values
+module.exports = Function(_keys(_imports), 'return ' + function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<label>' +
+__e( title ) +
+'</label>\n    <input type="text" id="search_input" />';
+
+}
+return __p
+}.toString()).apply(undefined, _values(_imports));
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports) {
+
+var _imports = (typeof _ !== 'undefined') ? _.templateSettings.imports : {};
+var _keys = _.keys;
+var _values = _.values
+module.exports = Function(_keys(_imports), 'return ' + function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ if (numberOfPage != currentPage) { ;
+__p += '\n<span><a href = \'#\' data-page-id="' +
+__e( numberOfPage ) +
+'">' +
+__e( numberOfPage ) +
+'</a></span>\n';
+ } else { ;
+__p += '\n<span>' +
+__e( numberOfPage ) +
+'</span>\n';
+ } ;
+__p += '\n';
+
+}
+return __p
+}.toString()).apply(undefined, _values(_imports));
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+var _imports = (typeof _ !== 'undefined') ? _.templateSettings.imports : {};
+var _keys = _.keys;
+var _values = _.values
+module.exports = Function(_keys(_imports), 'return ' + function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '\n  <div class = \'slide\' id = \'slide-id-' +
+((__t = (number+1)) == null ? '' : __t) +
+'\' style=\'width:' +
+((__t = (width)) == null ? '' : __t) +
+'px;min-width:' +
+((__t = (width)) == null ? '' : __t) +
+'px;\'>\n      <a href = \'' +
+__e( url ) +
+'\' >\n         <div>' +
+__e( title ) +
+'</div>\n      </a>\n      <div class=\'preview-image\'><img src = ' +
+__e(urlImg) +
+' ></div>\n      <div class = "author">' +
+__e( author ) +
+'</div>\n      <div class = "viewCount">Views: ' +
+__e( viewCount ) +
+'</div>\n\n  </div>\n\n\n\n\n\n\n\n\n';
+
+}
+return __p
+}.toString()).apply(undefined, _values(_imports));
+
+/***/ }),
+/* 9 */
 /***/ (function(module, exports) {
 
 var g;
@@ -17368,7 +17703,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 7 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -17394,49 +17729,6 @@ module.exports = function(module) {
 	return module;
 };
 
-
-/***/ }),
-/* 8 */,
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */,
-/* 13 */,
-/* 14 */,
-/* 15 */,
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-var _ = __webpack_require__(5);
-
-var slideMethods = {
-    slideToRigth: function slideToRigth() {
-        var currentElm = document.getElementsByClassName('swipe__page_center')[0];
-        currentElm.classList.remove('swipe__page_center');
-        currentElm.classList.add('swipe__page_left');
-        var rigthElm = document.getElementsByClassName('swipe__page_right')[0];
-        console.log(rigthElm);
-        rigthElm.classList.remove('swipe__page_right');
-        rigthElm.classList.add('swipe__page_center');
-    },
-    slideToLeft: function slideToLeft() {
-        var currentElm = document.getElementsByClassName('swipe__page_center')[0];
-        currentElm.classList.remove('swipe__page_center');
-        currentElm.classList.add('swipe__page_right');
-        var rigthElm = document.getElementsByClassName('swipe__page_left')[0];
-        console.log(rigthElm);
-        rigthElm.classList.remove('swipe__page_left');
-        rigthElm.classList.add('swipe__page_center');
-    }
-};
-
-exports.default = slideMethods;
 
 /***/ })
 /******/ ]);

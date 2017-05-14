@@ -15,6 +15,7 @@ let swipe = {
         e = ('changedTouches' in e)?e.changedTouches[0] : e;
         swipe.touchStartCoords = {'x':e.pageX, 'y':e.pageY};
         swipe.startTime = new Date().getTime();
+        document.getElementById('content-slider').style.cursor = 'grab';
         //targetElement.textContent = " ";
     },
 
@@ -33,10 +34,10 @@ let swipe = {
                 swipe.direction = (swipe.touchEndCoords.x < 0)? 'left' : 'right';
                 switch(swipe.direction){
                     case 'left':
-                        slider.slideToLeft();
+                        slider.slideToRigth();
                         break;
                     case 'right':
-                        slider.slideToRigth();
+                        slider.slideToLeft();
                         break;
                 }
             }

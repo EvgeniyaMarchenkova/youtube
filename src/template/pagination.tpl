@@ -1,1 +1,5 @@
-<span><a href = '#' id="number-of-page-<%- numberOfPage %>"><%- numberOfPage %></a></span>
+<% if (numberOfPage != currentPage) { %>
+<span><a href = '#' data-page-id="<%- numberOfPage %>"><%- numberOfPage %></a></span>
+<% } else { %>
+<span><%- numberOfPage %></span>
+<% } %>
